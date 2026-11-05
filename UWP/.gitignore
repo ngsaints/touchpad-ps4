@@ -1,0 +1,7 @@
+bin/
+obj/
+.vs/
+Installer/
+Tray/*.exe
+*.user
+*.pfx

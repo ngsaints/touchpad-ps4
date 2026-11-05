@@ -1,0 +1,50 @@
+<Page x:Class="TouchpadPS4.MainPage"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Grid Background="#0D1423">
+  <Ellipse Width="480" Height="480" Fill="#183D55" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-180,-210,0,0" />
+  <Ellipse Width="420" Height="420" Fill="#272449" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-160,-160" />
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+   <StackPanel MaxWidth="640" Margin="28,24,28,28" HorizontalAlignment="Stretch" Spacing="18">
+    <StackPanel Spacing="6">
+     <TextBlock Text="TOUCHPAD / PS4" FontSize="12" CharacterSpacing="240" Foreground="#7AE8DC" />
+     <TextBlock Text="Seu controle. Seu mouse." FontSize="30" FontWeight="SemiBold" TextWrapping="Wrap" />
+     <TextBlock Text="Movimentos leves, controle na ponta dos dedos." Foreground="#AAB9CE" TextWrapping="Wrap" />
+    </StackPanel>
+    <Border Background="{StaticResource Glass}" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="22" Padding="24">
+     <StackPanel Spacing="16">
+      <TextBlock Text="CONTROLE DO MOUSE" FontSize="12" CharacterSpacing="130" Foreground="#AAB9CE" />
+      <ToggleSwitch x:Name="EnabledSwitch" Header="Touchpad como mouse" OnContent="Ativado" OffContent="Desativado" Toggled="SettingsChanged" />
+      <TextBlock x:Name="StatusText" Text="Iniciando conexão…" Foreground="#7AE8DC" TextWrapping="Wrap" />
+      <Button Content="Reconectar controle" Click="ReconnectClick" Padding="18,10" CornerRadius="10" />
+     </StackPanel>
+    </Border>
+    <Border Background="{StaticResource Glass}" BorderBrush="#30FFFFFF" BorderThickness="1" CornerRadius="22" Padding="24">
+     <StackPanel Spacing="14">
+      <TextBlock Text="DO SEU JEITO" FontSize="12" CharacterSpacing="130" Foreground="#AAB9CE" />
+      <TextBlock x:Name="SensitivityLabel" Text="Sensibilidade · 1,0×" />
+      <Slider x:Name="Sensitivity" Minimum="0.2" Maximum="3" StepFrequency="0.1" Value="1" ValueChanged="SensitivityChanged" />
+      <TextBlock Text="Define a distância que o cursor percorre com o dedo." Foreground="#AAB9CE" FontSize="13" TextWrapping="Wrap" />
+      <TextBlock x:Name="SpeedLabel" Text="Velocidade em movimentos rápidos · +0%" />
+      <Slider x:Name="Speed" Minimum="0" Maximum="200" StepFrequency="10" Value="0" ValueChanged="SpeedChanged" />
+      <TextBlock Text="Aumenta a velocidade em gestos rápidos, mantendo a precisão dos gestos lentos. Em 0%, o movimento é uniforme." Foreground="#AAB9CE" FontSize="13" TextWrapping="Wrap" />
+      <TextBlock Text="Estes ajustes afetam somente o touchpad do PS4. As configurações do seu mouse permanecem iguais." Foreground="#7AE8DC" FontSize="13" TextWrapping="Wrap" />
+      <Button Content="Restaurar movimento padrão" Click="ResetMotionClick" Padding="18,10" CornerRadius="10" />
+      <ToggleSwitch x:Name="TapSwitch" Header="Toque rápido para clicar" IsOn="True" Toggled="SettingsChanged" />
+      <ToggleSwitch x:Name="ScrollSwitch" Header="Dois dedos para rolar" IsOn="True" Toggled="SettingsChanged" />
+     </StackPanel>
+    </Border>
+    <Border Background="{StaticResource Glass}" BorderBrush="#30FFFFFF" BorderThickness="1" CornerRadius="22" Padding="24">
+     <StackPanel Spacing="12">
+      <TextBlock Text="SEMPRE À MÃO" FontSize="12" CharacterSpacing="130" Foreground="#AAB9CE" />
+      <ToggleSwitch x:Name="TraySwitch" Header="Manter na área de notificação" IsOn="True" Toggled="SettingsChanged" />
+      <TextBlock Text="Ao minimizar, a janela fica na barra de tarefas. Ao fechar, o mouse continua ativo pelo ícone perto do relógio se esta opção estiver ligada. Clique com o botão direito no ícone para ativar, desativar ou sair." TextWrapping="Wrap" Foreground="#AAB9CE" FontSize="13" />
+      <TextBlock Text="Ctrl + Alt + M · ativar ou desativar&#xA;L1 + clique no touchpad · botão direito" Foreground="#7AE8DC" FontSize="13" />
+      <Button Content="Ocultar na bandeja" Click="HideClick" Padding="18,10" CornerRadius="10" />
+      <Button Content="Encerrar mouse e aplicativo" Click="ExitClick" Padding="18,10" CornerRadius="10" />
+     </StackPanel>
+    </Border>
+   </StackPanel>
+  </ScrollViewer>
+ </Grid>
+</Page>

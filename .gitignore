@@ -1,0 +1,30 @@
+# Build outputs and installers
+**/bin/
+**/obj/
+**/.vs/
+UWP/Installer/
+*.exe
+*.dll
+*.pdb
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.zip
+
+# Local settings, credentials and signing material
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+*.user
+*.suo
+*.log
+settings.txt
+status.txt
+heartbeat.txt
+command.txt

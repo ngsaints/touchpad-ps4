@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+ xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+ xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+ xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+ IgnorableNamespaces="uap desktop rescap">
+ <Identity Name="DaniSaints.TouchpadPS4" Publisher="CN=TouchpadPS4" Version="1.0.0.0" />
+ <Properties><DisplayName>Touchpad PS4</DisplayName><PublisherDisplayName>Touchpad PS4</PublisherDisplayName><Logo>Assets\StoreLogo.png</Logo></Properties>
+ <Dependencies><TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" /></Dependencies>
+ <Resources><Resource Language="pt-BR" /></Resources>
+ <Applications>
+  <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="TouchpadPS4.App">
+   <uap:VisualElements DisplayName="Touchpad PS4" Description="Use o touchpad do DualShock 4 como mouse" BackgroundColor="#101827" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" />
+   <Extensions>
+    <desktop:Extension Category="windows.fullTrustProcess" Executable="Tray\TouchpadPS4.Tray.exe" />
+    <uap:Extension Category="windows.protocol"><uap:Protocol Name="touchpadps4"><uap:DisplayName>Touchpad PS4</uap:DisplayName></uap:Protocol></uap:Extension>
+   </Extensions>
+  </Application>
+ </Applications>
+ <Capabilities><rescap:Capability Name="runFullTrust" /></Capabilities>
+</Package>

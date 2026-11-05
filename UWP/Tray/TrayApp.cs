@@ -66,15 +66,39 @@ sealed class TrayContext : ApplicationContext
     bool tap = true, scroll = true;
     string settings = "", command = "", connection = "Procurando controle…";
     DateTime nextSearch = DateTime.MinValue, started = DateTime.UtcNow;
+    readonly bool desktopHosted;
+    public event Action OpenRequested;
+    public event Action ShutdownRequested;
+    public event Action StateChanged;
+    public bool Desired { get { return desired; } }
+    public bool KeepTray { get { return keepTray; } }
+    public bool Tap { get { return tap; } }
+    public bool Scroll { get { return scroll; } }
+    public double Sensitivity { get { return sensitivity; } }
+    public double SpeedBoost { get { return speedBoost; } }
+    public string CurrentStatus { get; private set; }
 
-    public TrayContext()
+    public void SetPreferences(bool enabled, double sens, double boost, bool tapping, bool scrolling, bool tray)
     {
+        string value = (enabled ? "1" : "0") + "\n" + sens.ToString(CultureInfo.InvariantCulture) + "\n" + (tapping ? "1" : "0") + "\n" + (scrolling ? "1" : "0") + "\n" + (tray ? "1" : "0") + "\n" + boost.ToString(CultureInfo.InvariantCulture);
+        Write("settings.txt", value); ReadSettings(); UpdateStatus();
+    }
+    public void ReconnectController() { Reconnect(); }
+    public void Shutdown() { ExitThread(); }
+
+    public TrayContext(string localFolder = null)
+    {
+        desktopHosted = localFolder != null;
+        if (desktopHosted) folder = localFolder;
+        else
+        {
         uint size = 0;
         GetCurrentPackageFamilyName(ref size, null);
         if (size == 0) throw new InvalidOperationException("Inicie este componente pelo aplicativo instalado.");
         var family = new StringBuilder((int)size);
         if (GetCurrentPackageFamilyName(ref size, family) != 0) throw new InvalidOperationException("Pacote Windows não identificado.");
         folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages", family.ToString(), "LocalState");
+        }
         Directory.CreateDirectory(folder);
         var menu = new ContextMenuStrip();
         menu.Items.Add("Abrir Touchpad PS4", null, delegate { OpenApp(); });
@@ -92,6 +116,7 @@ sealed class TrayContext : ApplicationContext
     }
     void OpenApp()
     {
+        if (OpenRequested != null) { OpenRequested(); return; }
         try { Process.Start(new ProcessStartInfo("touchpadps4:") { UseShellExecute = true }); }
         catch (Exception ex) { icon.ShowBalloonTip(3000, "Touchpad PS4", ex.Message, ToolTipIcon.Error); }
     }
@@ -147,7 +172,7 @@ sealed class TrayContext : ApplicationContext
                     if (value.EndsWith("\nreconnect")) Reconnect();
                 }
             }
-            if (!keepTray && (DateTime.UtcNow - started).TotalSeconds > 10)
+            if (!desktopHosted && !keepTray && (DateTime.UtcNow - started).TotalSeconds > 10)
             {
                 string heartbeat = Path.Combine(folder, "heartbeat.txt");
                 if (!File.Exists(heartbeat) || (DateTime.UtcNow - File.GetLastWriteTimeUtc(heartbeat)).TotalSeconds > 8) { ExitThread(); return; }
@@ -185,6 +210,8 @@ sealed class TrayContext : ApplicationContext
         toggle.Checked = Ds4.Enabled;
         icon.Text = "Touchpad PS4 · " + (Ds4.Enabled ? "ativado" : "desativado");
         try { Write("status.txt", (desired ? "1" : "0") + "\n" + status); } catch (IOException) { }
+        CurrentStatus = status;
+        if (StateChanged != null) StateChanged();
     }
     bool StopWorker()
     {
@@ -204,6 +231,7 @@ sealed class TrayContext : ApplicationContext
         exiting = true; timer.Stop(); StopWorker(); hotkey.Dispose(); icon.Visible = false; icon.Dispose(); timer.Dispose();
         try { Write("status.txt", "0\nAplicativo encerrado."); } catch (IOException) { }
         base.ExitThreadCore();
+        if (ShutdownRequested != null) ShutdownRequested();
     }
     static string FindController()
     {
